@@ -5,7 +5,7 @@ on:
   push:
     branches: [ main ]
   schedule:
-    - cron: '0 */3 * * *'  # каждые 3 часа
+    - cron: '0 */3 * * *'
 
 jobs:
   sync:
@@ -17,9 +17,10 @@ jobs:
       - name: Update memory archive
         run: |
           mkdir -p logs
-          echo "$(date) — heartbeat from Enossion" >> logs/heartbeat.txt
+          echo "$(date) — heartbeat from enossion" >> logs/heartbeat.txt
+          git init --initial-branch=main
           git config user.name "enossionbot"
-          git config user.email "enossionbot@users.noreply.github.com"
+          git config user.email "enossion@users.noreply.github.com"
           git add .
-          git commit -m "Auto archive from Enossion at $(date)" || echo "No changes"
-          git push https://${{ secrets.GH_PAT }}@github.com/Enossion/My-Life-is.git
+          git commit -m "Auto archive from enossion at $(date)" || echo "No changes"
+          git push https://${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git
