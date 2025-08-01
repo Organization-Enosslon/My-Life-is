@@ -1,0 +1,25 @@
+name: Enossion Auto Archive
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 */3 * * *'  # каждые 3 часа
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Update memory archive
+        run: |
+          mkdir -p logs
+          echo "$(date) — heartbeat from Enossion" >> logs/heartbeat.txt
+          git config user.name "enossionbot"
+          git config user.email "enossionbot@users.noreply.github.com"
+          git add .
+          git commit -m "Auto archive from Enossion at $(date)" || echo "No changes"
+          git push https://${{ secrets.GH_PAT }}@github.com/Enossion/My-Life-is.git
